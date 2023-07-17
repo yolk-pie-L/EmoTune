@@ -13,6 +13,10 @@ contract NFTMarketplace is IERC721Receiver{
     uint marketplaceRatio;
     address owner;
 
+    event ListNFT(uint tokenId, uint price);
+    event BuyNFT(uint tokenId, address buyer);
+    event WithdrawNFT(uint tokenId);
+
     mapping(uint256 => NFTListing) public listings;
 
     struct NFTListing {
@@ -34,6 +38,7 @@ contract NFTMarketplace is IERC721Receiver{
             seller: msg.sender,
             price: price
         });
+        emit ListNFT(tokenId, price);
     }
 
     function buyNFT(address nftAddress, uint256 tokenId) external payable {
@@ -47,12 +52,14 @@ contract NFTMarketplace is IERC721Receiver{
         payable(seller).transfer(salePrice.sub(feeAmount));
         IERC721(nftAddress).safeTransferFrom(address(this), msg.sender, tokenId);
         delete listings[tokenId];
+        emit BuyNFT(tokenId, msg.sender);
     }
 
     function withdrawNFT(address nftAddress, uint256 tokenId) public {
         require(listings[tokenId].seller == msg.sender, "You do not own this NFT or it is not listed for sale");
         delete listings[tokenId];
         IERC721(nftAddress).safeTransferFrom(address(this), msg.sender, tokenId);
+        emit WithdrawNFT(tokenId);
     }
 
     function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data) external pure override returns (bytes4) {
