@@ -5,8 +5,10 @@ import { ethers } from "ethers";
 
 // We import the contract's artifacts and address here, as we are going to be
 // using them with ethers
-import TokenArtifact from "../contracts/Token.json"; //不需要
-import contractAddress from "../contracts/contract-address.json"; //不需要
+import NFTItemArtifact from "../contracts/NFTItem.json";
+import NFTMarketplaceArtifact from "../contracts/NFTMarketplace.json";
+import NFTItemAddress from "../contracts/NFTItem-contract-address.json";
+import NFTMarketplaceAddress from "../contracts/NFTMarketplace-contract-address.json";
 
 // All the logic of this dapp is contained in the Dapp component.
 // These other components are just presentational ones: they don't have any
@@ -16,13 +18,15 @@ import { ConnectWallet } from "./ConnectWallet";
 import { Loading } from "./Loading";
 import { Transfer } from "./Transfer";
 import { NoTokensMessage } from "./NoTokensMessage";
+import { MintNFTButton } from "./MintNFTButton";
 import axios from "axios";
+import { SellNFTButton } from "./SellNFTButton";
 
 // axios.defaults.baseURL= "https://5ous2fgk3m.execute-api.us-east-1.amazonaws.com/default";
 
 // This is the default id used by the Hardhat Network
-const HARDHAT_NETWORK_ID = '31337';
-const HARDHAT_NETWORK_HEX_ID = '0x7a69';
+const HARDHAT_NETWORK_ID = "31337";
+const HARDHAT_NETWORK_HEX_ID = "0x7a69";
 // This is an error code that indicates that the user canceled a transaction
 const ERROR_CODE_TX_REJECTED_BY_USER = 4001;
 
@@ -71,12 +75,9 @@ export class Dapp extends React.Component {
     //
     // Note that we pass it a callback that is going to be called when the user
     // clicks a button. This callback just calls the _connectWallet method.
-    if (!this.state.selectedAddress) {//重要
-      return (
-        <ConnectWallet 
-          connectWallet={() => this._connectWallet()} 
-        />
-      );
+    if (!this.state.selectedAddress) {
+      //重要
+      return <ConnectWallet connectWallet={() => this._connectWallet()} />;
     }
 
     // If the token data or the user's balance hasn't loaded yet, we show
@@ -105,14 +106,20 @@ export class Dapp extends React.Component {
         </div>
 
         <hr />
-        
+
         <div className="row">
           <div className="col-12">
             {/*
               If the user has no tokens, we don't show the Transfer form
             */}
             {this.state.balance.eq(0) && (
-              <NoTokensMessage selectedAddress={this.state.selectedAddress} />
+              <>
+                {/* <NoTokensMessage selectedAddress={this.state.selectedAddress} /> */}
+                <MintNFTButton
+                  signer={this._provider.getSigner(0)}
+                  NFTItem={this._NFTItem}
+                />
+              </>
             )}
 
             {/*
@@ -122,11 +129,11 @@ export class Dapp extends React.Component {
               callback.
             */}
             {this.state.balance.gt(0) && (
-              <Transfer
-                transferTokens={(to, amount) =>
-                  this._transferTokens(to, amount)
-                }
-                tokenSymbol={this.state.tokenData.symbol}
+              <SellNFTButton
+                signer={this._provider.getSigner(0)}
+                NFTMarketplace={this._NFTMarketplace}
+                NFTItem={this._NFTItem}
+                tokenId="1" /* need to ask backend */
               />
             )}
           </div>
@@ -135,14 +142,15 @@ export class Dapp extends React.Component {
     );
   }
 
-
   async _connectWallet() {
     // This method is run when the user clicks the Connect. It connects the
     // dapp to the user's wallet, and initializes it.
 
     // To connect to the user's wallet, we have to run this method.
     // It returns a promise that will resolve to the user's address.
-    const [selectedAddress] = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    const [selectedAddress] = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
 
     // Once we have the address, we can initialize the application.
 
@@ -152,21 +160,23 @@ export class Dapp extends React.Component {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     // axios.get("http://www.baidu.com");
-    axios.post('https://1iham0at2e.execute-api.us-east-1.amazonaws.com/default/get_nonce',{
-      address: selectedAddress
-    })
-    .then(function(res){
-      console.log(res.data);
-      console.log("123");
-    })
-    .catch(function(err){
-      console.log(err);
-    });  
+    axios
+      .post(
+        "https://1iham0at2e.execute-api.us-east-1.amazonaws.com/default/get_nonce",
+        {
+          address: selectedAddress,
+        }
+      )
+      .then(function (res) {
+        console.log(res.data);
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
     // 准备要签名的消息
-    const message = 'Hello, world!';
+    const message = "Hello, world!";
     const messageBytes = ethers.utils.toUtf8Bytes(message);
 
-    
     // 使用 Metamask 进行消息签名
     const signature = await signer.signMessage(messageBytes);
 
@@ -174,15 +184,15 @@ export class Dapp extends React.Component {
 
     // We reinitialize it whenever the user changes their account.
     window.ethereum.on("accountsChanged", ([newAddress]) => {
-      this._stopPollingData();//不需要
+      this._stopPollingData(); //不需要
       // `accountsChanged` event can be triggered with an undefined newAddress.
       // This happens when the user removes the Dapp from the "Connected
       // list of sites allowed access to your addresses" (Metamask > Settings > Connections)
-      // To avoid errors, we reset the dapp state 
+      // To avoid errors, we reset the dapp state
       if (newAddress === undefined) {
         return this._resetState();
       }
-      
+
       this._initialize(newAddress);
     });
   }
@@ -200,20 +210,28 @@ export class Dapp extends React.Component {
 
     // Fetching the token data and the user's balance are specific to this
     // sample project, but you can reuse the same initialization pattern.
-    this._initializeEthers();//不需要
-    this._getTokenData();//不需要
-    this._startPollingData();//不需要
+    this._initializeEthers(); //不需要
+    this._getTokenData(); //不需要
+    this._startPollingData(); //不需要
   }
 
-  async _initializeEthers() {//不需要
+  async _initializeEthers() {
+    //不需要
     // We first initialize ethers by creating a provider using window.ethereum
     this._provider = new ethers.providers.Web3Provider(window.ethereum);
 
     // Then, we initialize the contract using that provider and the token's
     // artifact. You can do this same thing with your contracts.
-    this._token = new ethers.Contract(
-      contractAddress.Token,
-      TokenArtifact.abi,
+    this._NFTItem = new ethers.Contract(
+      NFTItemAddress.address,
+      NFTItemArtifact.abi,
+      this._provider.getSigner(0)
+    );
+    console.log("NFTItem", NFTItemAddress.address);
+
+    this._NFTMarketplace = new ethers.Contract(
+      NFTMarketplaceAddress.address,
+      NFTMarketplaceArtifact.abi,
       this._provider.getSigner(0)
     );
   }
@@ -225,32 +243,35 @@ export class Dapp extends React.Component {
   // Note that if you don't need it to update in near real time, you probably
   // don't need to poll it. If that's the case, you can just fetch it when you
   // initialize the app, as we do with the token data.
-  _startPollingData() {//不需要
+  _startPollingData() {
+    //不需要
     this._pollDataInterval = setInterval(() => this._updateBalance(), 1000);
 
     // We run it once immediately so we don't have to wait for it
     this._updateBalance();
   }
 
-  _stopPollingData() {//不需要
+  _stopPollingData() {
+    //不需要
     clearInterval(this._pollDataInterval);
     this._pollDataInterval = undefined;
   }
 
   // The next two methods just read from the contract and store the results
   // in the component state.
-  async _getTokenData() {//不需要
-    const name = await this._token.name();
-    const symbol = await this._token.symbol();
+  async _getTokenData() {
+    //不需要
+    const name = await this._NFTItem.name();
+    const symbol = await this._NFTItem.symbol();
 
     this.setState({ tokenData: { name, symbol } });
   }
 
-  async _updateBalance() {//不需要
-    const balance = await this._token.balanceOf(this.state.selectedAddress);
+  async _updateBalance() {
+    //不需要
+    const balance = await this._NFTItem.balanceOf(this.state.selectedAddress);
     this.setState({ balance });
   }
-
 
   // This method resets the state
   _resetState() {
