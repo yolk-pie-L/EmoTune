@@ -1,5 +1,12 @@
 # EmoTune
 EmoTune: Minting NFT for Generated Emotion-driven  Music
+
+```sh
+cd frontend
+npm install
+npm start
+```
+
 # Hardhat Boilerplate
 
 This repository contains a sample project that you can use as the starting point
@@ -10,6 +17,8 @@ This project is intended to be used with the
 [Hardhat Beginners Tutorial](https://hardhat.org/tutorial), but you should be
 able to follow it by yourself by reading the README and exploring its
 `contracts`, `tests`, `scripts` and `frontend` directories.
+
+
 
 ## Quick start
 
