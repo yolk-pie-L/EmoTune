@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 
 export function SellNFTButton({ signer, NFTMarketplace, NFTItem, tokenId }) {
   const [inputValue, setInputValue] = useState("");
+  tokenId = 2;
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);

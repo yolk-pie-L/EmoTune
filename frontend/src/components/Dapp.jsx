@@ -25,8 +25,8 @@ import { SellNFTButton } from "./SellNFTButton";
 // axios.defaults.baseURL= "https://5ous2fgk3m.execute-api.us-east-1.amazonaws.com/default";
 
 // This is the default id used by the Hardhat Network
-const HARDHAT_NETWORK_ID = "31337";
-const HARDHAT_NETWORK_HEX_ID = "0x7a69";
+const HARDHAT_NETWORK_ID = "80001";
+const HARDHAT_NETWORK_HEX_ID = "0x13881";
 // This is an error code that indicates that the user canceled a transaction
 const ERROR_CODE_TX_REJECTED_BY_USER = 4001;
 
