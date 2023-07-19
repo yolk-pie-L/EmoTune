@@ -21,6 +21,7 @@ import { NoTokensMessage } from "./NoTokensMessage";
 import { MintNFTButton } from "./MintNFTButton";
 import axios from "axios";
 import { SellNFTButton } from "./SellNFTButton";
+import { m } from "framer-motion";
 
 // axios.defaults.baseURL= "https://5ous2fgk3m.execute-api.us-east-1.amazonaws.com/default";
 
@@ -159,10 +160,9 @@ export class Dapp extends React.Component {
 
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
-    // axios.get("http://www.baidu.com");
-    axios
+    const message = axios
       .post(
-        "https://1iham0at2e.execute-api.us-east-1.amazonaws.com/default/get_nonce",
+        "https://ve8x4frvd8.execute-api.us-east-1.amazonaws.com/default/getNonce",
         {
           address: selectedAddress,
         }
@@ -170,15 +170,23 @@ export class Dapp extends React.Component {
       .then(function (res) {
         console.log(res.data);
       })
-      .catch(function (err) {
-        console.log(err);
-      });
+      
     // 准备要签名的消息
-    const message = "Hello, world!";
-    const messageBytes = ethers.utils.toUtf8Bytes(message);
+    const newMessage = selectedAddress + " " + message
+    const messageBytes = ethers.utils.toUtf8Bytes(newMessage);
 
     // 使用 Metamask 进行消息签名
     const signature = await signer.signMessage(messageBytes);
+
+    const authen = axios.post(
+      "https://ve8x4frvd8.execute-api.us-east-1.amazonaws.com/default/authenticate",
+      {
+        address: selectedAddress,
+        signature: signature
+      }
+    ).then(function (res) {
+      console.log(res.data)
+    })
 
     this._initialize(selectedAddress);
 

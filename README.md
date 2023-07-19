@@ -1,3 +1,5 @@
+# EmoTune
+EmoTune: Minting NFT for Generated Emotion-driven  Music
 # Hardhat Boilerplate
 
 This repository contains a sample project that you can use as the starting point
