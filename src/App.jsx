@@ -81,7 +81,7 @@ function App() {
     <>
       <link
         rel="stylesheet"
-        href="node_modules/highlight.js/styles/stackoverflow-light.css"
+        href="../node_modules/highlight.js/styles/stackoverflow-light.css"
       ></link>
       <div className="grid grid-cols-10 w-full m-auto min-h-screen  font-sans bg-slate-50 ">
         <div className=" m-4 col-span-2 bg-sky-950 rounded-2xl">
