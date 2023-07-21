@@ -1,0 +1,65 @@
+{
+  "name": "@dogstudio/highway",
+  "license": "MIT",
+  "version": "2.2.1",
+  "description": "Highway helps you manage your page transitions",
+  "source": "src/highway.js",
+  "main": "build/highway.js",
+  "umd:main": "build/highway.min.js",
+  "module": "build/highway.module.js",
+  "unpkg": "build/highway.min.js",
+  "files": [
+    "src",
+    "build"
+  ],
+  "contributors": [
+    {
+      "name": "Anthony Du Pont",
+      "email": "bulldog@dogstudio.co",
+      "url": "https://twitter.com/Anthodpnt"
+    },
+    {
+      "name": "Thao Delefortrie",
+      "email": "malamute@dogstudio.co",
+      "url": "https://twitter.com/ThaoD5"
+    },
+    {
+      "name": "Josh Kirk",
+      "email": "josh@zero.nyc",
+      "url": "https://twitter.com/joshgkirk"
+    },
+    {
+      "name": "Mike Wagz",
+      "email": "mike@selfaware.studio",
+      "url": "https://twitter.com/mike_wagz"
+    }
+  ],
+  "scripts": {
+    "clean": "rm -rf build/highway.*",
+    "build": "microbundle --external none",
+    "watch": "microbundle watch --external none",
+    "lint": "eslint src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dogstudio/highway.git"
+  },
+  "keywords": [
+    "js",
+    "manager",
+    "javascript",
+    "transitions",
+    "animations",
+    "library"
+  ],
+  "bugs": {
+    "url": "https://github.com/Dogstudio/highway/issues"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "microbundle": "^0.11.0"
+  },
+  "dependencies": {
+    "tiny-emitter": "^2.1.0"
+  }
+}
