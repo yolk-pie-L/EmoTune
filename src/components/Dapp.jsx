@@ -1,5 +1,5 @@
 import React from "react";
-
+import { useEffect, useState } from "react";
 // We'll use ethers to interact with the Ethereum network and our contract
 import { ethers } from "ethers";
 
@@ -21,12 +21,14 @@ import { NoTokensMessage } from "./NoTokensMessage";
 import { MintNFTButton } from "./MintNFTButton";
 import axios from "axios";
 import { SellNFTButton } from "./SellNFTButton";
+import { m } from "framer-motion";
+import {Personal} from "./Personal";
 
 // axios.defaults.baseURL= "https://5ous2fgk3m.execute-api.us-east-1.amazonaws.com/default";
 
 // This is the default id used by the Hardhat Network
-const HARDHAT_NETWORK_ID = "31337";
-const HARDHAT_NETWORK_HEX_ID = "0x7a69";
+const HARDHAT_NETWORK_ID = "80001";
+const HARDHAT_NETWORK_HEX_ID = "0x13881";
 // This is an error code that indicates that the user canceled a transaction
 const ERROR_CODE_TX_REJECTED_BY_USER = 4001;
 
@@ -89,56 +91,8 @@ export class Dapp extends React.Component {
     // If everything is loaded, we render the application.
     //不需要
     return (
-      <div className="container p-4">
-        <div className="row">
-          <div className="col-12">
-            <h1>
-              {this.state.tokenData.name} ({this.state.tokenData.symbol})
-            </h1>
-            <p>
-              Welcome <b>{this.state.selectedAddress}</b>, you have{" "}
-              <b>
-                {this.state.balance.toString()} {this.state.tokenData.symbol}
-              </b>
-              .
-            </p>
-          </div>
-        </div>
-
-        <hr />
-
-        <div className="row">
-          <div className="col-12">
-            {/*
-              If the user has no tokens, we don't show the Transfer form
-            */}
-            {this.state.balance.eq(0) && (
-              <>
-                {/* <NoTokensMessage selectedAddress={this.state.selectedAddress} /> */}
-                <MintNFTButton
-                  signer={this._provider.getSigner(0)}
-                  NFTItem={this._NFTItem}
-                />
-              </>
-            )}
-
-            {/*
-              This component displays a form that the user can use to send a 
-              transaction and transfer some tokens.
-              The component doesn't have logic, it just calls the transferTokens
-              callback.
-            */}
-            {this.state.balance.gt(0) && (
-              <SellNFTButton
-                signer={this._provider.getSigner(0)}
-                NFTMarketplace={this._NFTMarketplace}
-                NFTItem={this._NFTItem}
-                tokenId="1" /* need to ask backend */
-              />
-            )}
-          </div>
-        </div>
-      </div>
+      // <></>
+      <Personal address={this.state.selectedAddress} authentic={sessionStorage.getItem("authentic")}></Personal>
     );
   }
 
@@ -151,34 +105,42 @@ export class Dapp extends React.Component {
     const [selectedAddress] = await window.ethereum.request({
       method: "eth_requestAccounts",
     });
-
+    sessionStorage.setItem("selectAddress", selectedAddress);
     // Once we have the address, we can initialize the application.
+    var message = "hello";
 
     // First we check the network
     this._checkNetwork();
 
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
-    // axios.get("http://www.baidu.com");
-    axios
+    await axios
       .post(
-        "https://1iham0at2e.execute-api.us-east-1.amazonaws.com/default/get_nonce",
+        "https://ve8x4frvd8.execute-api.us-east-1.amazonaws.com/default/getNonce",
         {
           address: selectedAddress,
         }
       )
       .then(function (res) {
         console.log(res.data);
+        message = res.data;
       })
-      .catch(function (err) {
-        console.log(err);
-      });
     // 准备要签名的消息
-    const message = "Hello, world!";
-    const messageBytes = ethers.utils.toUtf8Bytes(message);
+    const newMessage = selectedAddress + " " + message
+    const messageBytes = ethers.utils.toUtf8Bytes(newMessage);
 
     // 使用 Metamask 进行消息签名
     const signature = await signer.signMessage(messageBytes);
+    axios.post(
+      "https://ve8x4frvd8.execute-api.us-east-1.amazonaws.com/default/authenticate",
+      {
+        address: selectedAddress,
+        signature: signature
+      }
+    ).then(function (res) {
+      console.log(res.data.JWT)
+      sessionStorage.setItem("authentic", res.data.JWT)
+    })
 
     this._initialize(selectedAddress);
 

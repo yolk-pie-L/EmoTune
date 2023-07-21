@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import {
   BsGithub,
+  BsCoin
 } from "react-icons/bs";
 import { SiOpensea } from "react-icons/si";
 import {
@@ -10,36 +11,78 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import axios from "axios";
-import dayjs from "dayjs";
-import { Dapp } from "./components/Dapp"; 
-
-const CARDBG = "bg-white rounded-lg py-4 pr-8";
+import { Dapp } from "./components/Dapp";
+import {Personal} from "./components/Personal"; 
+import {MarketPlace} from "./components/MarketPlace";
 const SELECTED =
   " to-orange-300 bg-gradient-to-tr from-orange-500 w-5/6 text-white  p-3 rounded-md";
 const UNSELECTED =
   "text-white p-3 rounded-md w-5/6 hover:bg-gray-600 hover:translate-x-2 transition";
 function App() {
-  const [loading, setLoading] = useState(true);
+
+  const [inputMood, setInputMood] = useState('');
+  const [tasks, setTasks] = useState([]);
+  const [moodID, setMoodId] = useState('') ?? "default";
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [authentic, setAuthentic] = useState(() => {
+    // getting stored value
+    const saved = sessionStorage.getItem("authentic");
+    return saved;
+  });
+  const [address, setAddress] = useState(() => {
+    const saved = sessionStorage.getItem("selectAddress") ?? "default";
+    return saved;
+  });
   useEffect(() => {
-  // const [nonAccepted, setNonAccepted] = useState(0)
-  
-    axios
-      .all([
-        
-      ])
-      .then(
-        axios.spread((...allData) => {  
-          setLoading(false);
-        })
-      )
-      .catch((err) => console.log(err));
-  }, []);
+    setAuthentic(sessionStorage.getItem("authentic"));
+  }, [authentic]);
+  useEffect(() => {
+    setAuthentic(sessionStorage.getItem("selectAddress"));
+    console.log(address);
+  }, [address]);
+
+  const generateMusic = () => {
+    event.preventDefault();
+    if (inputMood.trim() != '') {
+      setTasks([...tasks, inputMood]);
+      const response = axios.post(
+      "https://ve8x4frvd8.execute-api.us-east-1.amazonaws.com/default/createMood",
+      {
+        description:inputMood
+      },
+      {
+        headers: {'Authorization': authentic}
+      }
+    ).then(function (res) {
+      console.log(res.data)
+      setMoodId(res.data);//记录moodID
+    })
+      setInputMood('');
+    }
+  }
+
+  const testFinished = () =>{
+    axios.post(
+      "https://ve8x4frvd8.execute-api.us-east-1.amazonaws.com/default/generationFinished"
+      ,
+      {
+        headers: {'Authorization': authentic}
+      }
+    ).then(function (res) {
+      console.log(res.data)
+    })
+  }
+  const selectTag = (tag) =>{
+    event.preventDefault();
+    setInputMood(tag);
+  }
   return (
     <>
-      {/* <link
+      <link
         rel="stylesheet"
         href="node_modules/highlight.js/styles/stackoverflow-light.css"
-      ></link> */}
+      ></link>
       <div className="grid grid-cols-10 w-full m-auto min-h-screen  font-sans bg-slate-50 ">
         <div className=" m-4 col-span-2 bg-sky-950 rounded-2xl">
           <div className=" px-10 py-8 flex justify-between">
@@ -93,7 +136,7 @@ function App() {
                 Music Market
               </a>
             ) : (
-              <a href="/tags" className={UNSELECTED}>
+              <a href="/market" className={UNSELECTED}>
                 Music Market
               </a>
             )}
@@ -102,23 +145,27 @@ function App() {
                 href="/setting"
                 className="bg-orange-400 w-5/6 transition-transform text-white p-3 rounded-md "
               >
-                Setting
+                Connect wallet
               </a>
             ) : (
               <a href="/setting" className={UNSELECTED}>
-                Setting
+                Connect wallet
               </a>
             )}
           </div>
         </div>
 
         <div className="main col-span-8" style={{ margin: "12px" }}>
-          <header className="pb-4 p-4 pr-10 flex justify-between">
+          {/* <SkeletonText isLoaded={!loading}> */}
+            <div className="flex-col space-y-4 px-8 py-8">
+              {window.location.pathname == "/" && (
+                <>
+                <header className="pb-4 p-4 pr-10 flex justify-between">
             <div>
-              <h1 className=" text-5xl font-bold font bg-gradient-to-r bg-clip-text text-transparent from-orange-500 to-orange-300">
+              <h2 className=" text-5xl font-bold font bg-gradient-to-r bg-clip-text text-transparent from-orange-500 to-orange-300">
               Minting NFT for Generated Emotion-driven  Music
-              </h1>
-              
+              </h2>
+            
             </div>
             <IconButton
               variant={"ghost"}
@@ -130,30 +177,93 @@ function App() {
             />
           </header>
           <Divider p={0} m={0} />
-          {/* <SkeletonText isLoaded={!loading}> */}
-            <div className="flex-col space-y-4 px-8 py-8">
-              {window.location.pathname == "/" && (
-                <>
-                <Dapp></Dapp>
-                </>
+               </>
               )}
               {window.location.pathname == "/music" && (
                 <>
-                  
+                <div>
+                    <div className="text-4xl font-bold">
+                      <h2>Input or Choose Your Mood</h2>
+                    </div>
+                </div>
+                <div class="md:row-start-1 tags w-full max-w-2xl h-fit place-self-end">
+        <ul class="flex gap-3 flex-wrap [&>*]:bg-white [&>*]:px-3 [&>*]:py-2 [&>*]:rounded-full [&>*:hover]:bg-slate-900 [&>*:hover]:text-white [&>*>a]:flex [&>*>a]:items-center [&>*>a]:gap-2">
+         <li><a href="" onClick={() => selectTag("Happy")}>
+             <h2>Happy</h2>
+             <iconify-icon icon="system-uicons:cross"></iconify-icon>
+             </a></li>
+         <li><a href="" onClick={() => selectTag("Sad")}>
+              <h2>Sad</h2>
+              <iconify-icon icon="system-uicons:cross"></iconify-icon>
+              </a></li>
+          <li><a href="" onClick={() => selectTag("Crazy")}>
+              <h2>Crazy</h2>
+              <iconify-icon icon="system-uicons:cross"></iconify-icon>    
+             </a></li>
+           <li><a href="" onClick={() => selectTag("hiphop")}>
+               <h2>hiphop</h2>
+              <iconify-icon icon="system-uicons:cross"></iconify-icon>
+              </a></li>
+            </ul>
+        </div>
+                      <div className="w-full max-w-3xl">
+                          <div>
+                              <form className="relative flex ">
+                                  <input type="text" id="search" placeholder="Enter your search here" className="border-0 focus:ring-0 focus:outline-0 w-[60%] bg-slate-600 rounded-l-lg pl-4 text-sm text-slate-200" value={inputMood}
+                                    onChange={e => {
+                                      console.log(e.target.value);
+                                      setInputMood(e.target.value);
+                                    }}/>
+                                  <button className="ring-4 ring-slate-600 ring-offset-[0.55rem] shadow-transparent ring-offset-slate-800 hover:ring-offset-rose-500  hover:bg-rose-500 bg-transparent rounded-[50%] active:scale-95 cursor-pointer" onClick={generateMusic}>
+                                      <h2 className="rounded-full border-4 border-rose-500 w-16 h-16  text-rose-500 text-2xl text-center justify-center flex items-center font-semibold hover:border-slate-600 hover:text-slate-600">GO</h2>
+                                  </button>
+
+                                  <div className="absolute -bottom-8 left-[1%] text-sm flex border-0 focus:outline-0 focus:ring-0 text-rose-500 mt-1 cursor-pointer">
+                                      <h2>Divide your input with semicolon</h2>
+                                      <div className="text-lg">
+                                          <iconify-icon icon="material-symbols:keyboard-arrow-down-rounded"></iconify-icon>
+                                      </div>   
+                                  </div>
+                              </form>   
+                          </div>
+                      </div>
+                      <table className="mt-4 min-w-full divide-y divide-gray-200">
+                        <thead>
+                          <tr>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tasks</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {tasks.map((task, index) => (
+                            <tr key={index}>
+                              <td className="px-6 py-4 whitespace-nowrap">{task}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                      <script src="https://code.iconify.design/iconify-icon/1.0.3/iconify-icon.min.js"></script>
+                  {/* </body> */}
                 </>
               )}
               {window.location.pathname == "/market" && (
                 <>
-                  
+                  <MarketPlace address={address} authentic={authentic}></MarketPlace>
                 </>
               )}
-              {window.location.pathname == "/setting" && (
+              {window.location.pathname == "/setting" && address == "default" && (
+                
+                  <>
+                    <Dapp></Dapp> {/* Render Dapp component for the first login */}
+                  </>
+               
+              )}
+              {window.location.pathname == "/setting" && address != "default" && (
                 <>
-                  
+                <Personal address={address} authentic={authentic}></Personal>
+                            
                 </>
               )}
             </div>
-          {/* </SkeletonText> */}
         </div>
       </div>
     </>
