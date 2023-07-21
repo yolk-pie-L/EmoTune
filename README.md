@@ -1,10 +1,10 @@
 # EmoTune
-EmoTune: Minting NFT for Generated Emotion-driven  Music
+EmoTune: Minting NFT for Generated Emotion-driven Music
 
 ```sh
 cd frontend
 npm install
-npm start
+npm run dev
 ```
 
 # Hardhat Boilerplate
