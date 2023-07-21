@@ -11,38 +11,72 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import axios from "axios";
-import dayjs from "dayjs";
-import { Dapp } from "./components/Dapp"; 
-
-const CARDBG = "bg-white rounded-lg py-4 pr-8";
+import { Dapp } from "./components/Dapp";
+import {Personal} from "./components/Personal"; 
+import {MarketPlace} from "./components/MarketPlace";
 const SELECTED =
   " to-orange-300 bg-gradient-to-tr from-orange-500 w-5/6 text-white  p-3 rounded-md";
 const UNSELECTED =
   "text-white p-3 rounded-md w-5/6 hover:bg-gray-600 hover:translate-x-2 transition";
 function App() {
-  const [loading, setLoading] = useState(true);
+
   const [inputMood, setInputMood] = useState('');
+  const [tasks, setTasks] = useState([]);
+  const [moodID, setMoodId] = useState('') ?? "default";
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [authentic, setAuthentic] = useState(() => {
+    // getting stored value
+    const saved = sessionStorage.getItem("authentic");
+    return saved;
+  });
+  const [address, setAddress] = useState(() => {
+    const saved = sessionStorage.getItem("selectAddress") ?? "default";
+    return saved;
+  });
   useEffect(() => {
-  
-    axios
-      .all([
-        
-      ])
-      .then(
-        axios.spread((...allData) => {  
-          setLoading(false);
-        })
-      )
-      .catch((err) => console.log(err));
-  }, []);
+    setAuthentic(sessionStorage.getItem("authentic"));
+  }, [authentic]);
+  useEffect(() => {
+    setAuthentic(sessionStorage.getItem("selectAddress"));
+    console.log(address);
+  }, [address]);
+
   const generateMusic = () => {
-    const moodID = axios.post(
+    event.preventDefault();
+    if (inputMood.trim() != '') {
+      setTasks([...tasks, inputMood]);
+      const response = axios.post(
       "https://ve8x4frvd8.execute-api.us-east-1.amazonaws.com/default/createMood",
       {
         description:inputMood
+      },
+      {
+        headers: {'Authorization': authentic}
       }
-    )
-  };
+    ).then(function (res) {
+      console.log(res.data)
+      setMoodId(res.data);//记录moodID
+    })
+      setInputMood('');
+    }
+  }
+
+  const testFinished = () =>{
+    axios.post(
+      "https://ve8x4frvd8.execute-api.us-east-1.amazonaws.com/default/generationFinished"
+      ,
+      {
+        headers: {'Authorization': authentic}
+      }
+    ).then(function (res) {
+      console.log(res.data)
+    })
+  }
+  const selectTag = (tag) =>{
+    event.preventDefault();
+    setInputMood(tag);
+  }
   return (
     <>
       <link
@@ -131,7 +165,7 @@ function App() {
               <h2 className=" text-5xl font-bold font bg-gradient-to-r bg-clip-text text-transparent from-orange-500 to-orange-300">
               Minting NFT for Generated Emotion-driven  Music
               </h2>
-              
+            
             </div>
             <IconButton
               variant={"ghost"}
@@ -143,7 +177,7 @@ function App() {
             />
           </header>
           <Divider p={0} m={0} />
-                </>
+               </>
               )}
               {window.location.pathname == "/music" && (
                 <>
@@ -152,10 +186,29 @@ function App() {
                       <h2>Input or Choose Your Mood</h2>
                     </div>
                 </div>
-                  <body className=" flex items-center justify-center min-h-screen [&_*]:transition-all [&_*]:ease-linear [&_*]:duration-150">
+                <div class="md:row-start-1 tags w-full max-w-2xl h-fit place-self-end">
+        <ul class="flex gap-3 flex-wrap [&>*]:bg-white [&>*]:px-3 [&>*]:py-2 [&>*]:rounded-full [&>*:hover]:bg-slate-900 [&>*:hover]:text-white [&>*>a]:flex [&>*>a]:items-center [&>*>a]:gap-2">
+         <li><a href="" onClick={() => selectTag("Happy")}>
+             <h2>Happy</h2>
+             <iconify-icon icon="system-uicons:cross"></iconify-icon>
+             </a></li>
+         <li><a href="" onClick={() => selectTag("Sad")}>
+              <h2>Sad</h2>
+              <iconify-icon icon="system-uicons:cross"></iconify-icon>
+              </a></li>
+          <li><a href="" onClick={() => selectTag("Crazy")}>
+              <h2>Crazy</h2>
+              <iconify-icon icon="system-uicons:cross"></iconify-icon>    
+             </a></li>
+           <li><a href="" onClick={() => selectTag("hiphop")}>
+               <h2>hiphop</h2>
+              <iconify-icon icon="system-uicons:cross"></iconify-icon>
+              </a></li>
+            </ul>
+        </div>
                       <div className="w-full max-w-3xl">
                           <div>
-                              <form className="relative flex items-centers justify-center">
+                              <form className="relative flex ">
                                   <input type="text" id="search" placeholder="Enter your search here" className="border-0 focus:ring-0 focus:outline-0 w-[60%] bg-slate-600 rounded-l-lg pl-4 text-sm text-slate-200" value={inputMood}
                                     onChange={e => {
                                       console.log(e.target.value);
@@ -165,7 +218,7 @@ function App() {
                                       <h2 className="rounded-full border-4 border-rose-500 w-16 h-16  text-rose-500 text-2xl text-center justify-center flex items-center font-semibold hover:border-slate-600 hover:text-slate-600">GO</h2>
                                   </button>
 
-                                  <div className="absolute -bottom-8 left-[17%] text-sm flex border-0 focus:outline-0 focus:ring-0 text-rose-500 mt-1 cursor-pointer">
+                                  <div className="absolute -bottom-8 left-[1%] text-sm flex border-0 focus:outline-0 focus:ring-0 text-rose-500 mt-1 cursor-pointer">
                                       <h2>Divide your input with semicolon</h2>
                                       <div className="text-lg">
                                           <iconify-icon icon="material-symbols:keyboard-arrow-down-rounded"></iconify-icon>
@@ -174,105 +227,43 @@ function App() {
                               </form>   
                           </div>
                       </div>
+                      <table className="mt-4 min-w-full divide-y divide-gray-200">
+                        <thead>
+                          <tr>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tasks</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {tasks.map((task, index) => (
+                            <tr key={index}>
+                              <td className="px-6 py-4 whitespace-nowrap">{task}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
                       <script src="https://code.iconify.design/iconify-icon/1.0.3/iconify-icon.min.js"></script>
-                  </body>
+                  {/* </body> */}
                 </>
               )}
               {window.location.pathname == "/market" && (
                 <>
-                  <div>
-                    <div className="text-4xl font-bold">
-                      <h2>Popular Collections</h2>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 flex-wrap grid grid-cols-3">
-                    <div className="w-full max-w-[20rem] p-6 bg-white rounded-2xl">
-                      <div>
-                      <img src="https://cdn.europosters.eu/image/750/posters/aurora-borealis-i47499.jpg" alt="" className="h-40 w-full rounded-3xl object-cover object-center cursor-pointer hover:scale-105 hover:-rotate-3"/>
-                      </div>
-                    <div className="flex items-center py-4 justify-between [&>*]:mx-2 [&>*>img]:h-20 [&>*>img]:aspect-square [&>*>img]:object-cover [&>*>img]:object-center [&>*>img]:rounded-xl [&>*>img:hover]:scale-110 [&>*>img:hover]:-rotate-12 [&>*>img]:cursor-pointer">
-                  </div>
-                      
-                      <div className="flex items-center justify-between">
-                          <h2>Collection Name</h2>
-                          <div className="flex items-center justify-center gap-1 cursor-pointer">
-                          <div className="text-2xl">
-                          <IconButton
-                            variant={"ghost"}
-                            _hover={{ bgColor: "none" }}
-                            icon={<BsCoin size={"sm"} />}
-                            size="sm"
-                            m={0}
-                            p={0}
-                          />
-                        </div>
-                          <p className="text-sm">4.56</p>
-                          </div>
-                      </div>
-                          
-                  </div>
-                    <div className="w-full max-w-[20rem] p-6 bg-white rounded-2xl">
-                        <div>
-                          <img src="https://www.celebritycruises.com/blog/content/uploads/2022/01/most-beautiful-mountains-in-the-world-kirkjufell-iceland-1024x580.jpg" alt="" className="h-40 w-full rounded-3xl object-cover object-center cursor-pointer hover:scale-105 hover:-rotate-3"/>
-                          </div>
-                          <div className="flex items-center py-4 justify-between [&>*]:mx-2 [&>*>img]:h-20 [&>*>img]:aspect-square [&>*>img]:object-cover [&>*>img]:object-center [&>*>img]:rounded-xl [&>*>img:hover]:scale-110 [&>*>img:hover]:-rotate-12 [&>*>img]:cursor-pointer">
-
-                        </div>
-                      
-                      <div className="flex items-center justify-between">
-                          <h2>Collection Name</h2>
-                          <div className="flex items-center justify-center gap-1 cursor-pointer">
-                          <div className="text-xl">
-                          <IconButton
-                            variant={"ghost"}
-                            _hover={{ bgColor: "none" }}
-                            icon={<BsCoin size={"sm"} />}
-                            size="sm"
-                            m={0}
-                            p={0}
-                          />
-                          </div>
-                          <p className="text-sm">2.33</p>
-                        </div>
-                      </div>
-                      
-                    </div>
-                  <div className="w-full max-w-[20rem] p-6 bg-white rounded-2xl">
-                      <div>
-                      <img src="https://www.holidify.com/images/cmsuploads/compressed/Taj_Mahal_20180814141729.png" alt="" className="h-40 w-full rounded-3xl object-cover object-center cursor-pointer hover:scale-105 hover:-rotate-3"/>
-                      </div>
-                      <div className="flex items-center py-4 justify-between [&>*]:mx-2 [&>*>img]:h-20 [&>*>img]:aspect-square [&>*>img]:object-cover [&>*>img]:object-center [&>*>img]:rounded-xl [&>*>img:hover]:scale-110 [&>*>img:hover]:-rotate-12 [&>*>img]:cursor-pointer">
-                  </div>            
-                  <div className="flex items-center justify-between">
-                      <h2>Collection Name</h2>
-                      <div className="flex items-center justify-center gap-1 cursor-pointer">
-                        <div className="text-xl">
-                        <IconButton
-                            variant={"ghost"}
-                            _hover={{ bgColor: "none" }}
-                            icon={<BsCoin size={"sm"} />}
-                            size="sm"
-                            m={0}
-                            p={0}
-                          />
-                        </div>
-                          <p className="text-sm">1.23</p> {/*价格*/}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  
-                  
-                  </div>
+                  <MarketPlace address={address} authentic={authentic}></MarketPlace>
                 </>
               )}
-              {window.location.pathname == "/setting" && (
+              {window.location.pathname == "/setting" && address == "default" && (
+                
+                  <>
+                    <Dapp></Dapp> {/* Render Dapp component for the first login */}
+                  </>
+               
+              )}
+              {window.location.pathname == "/setting" && address != "default" && (
                 <>
-                  <Dapp></Dapp>
+                <Personal address={address} authentic={authentic}></Personal>
+                            
                 </>
               )}
             </div>
-          {/* </SkeletonText> */}
         </div>
       </div>
     </>
