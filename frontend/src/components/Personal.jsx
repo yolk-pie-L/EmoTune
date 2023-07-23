@@ -3,7 +3,11 @@ import React, { useState, useEffect } from "react";
 import MintNFTButton from "./MintNFTButton";
 import WithdrawNFTButton from "./WithdrawNFTButton";
 import SellNFTButton from "./SellNFTButton";
-
+import copy from "copy-to-clipboard";
+import { message } from "antd";
+import MusicPlayer from "./MusicGenerate";
+import {Space, Button} from 'antd';
+import {RedoOutlined} from '@ant-design/icons';
 export function Personal({ address, authentic }) {
     const [musicList, setMusicList] = useState([]);
     const [NFTList, setNFTList] = useState([]);
@@ -30,6 +34,10 @@ export function Personal({ address, authentic }) {
         })
     }, []);
     
+    const copyName = (id) => {
+        copy(id);
+        message.success("Copied: " + id);
+      };
     return (
         
         <div className="w-[60rem] px-6 py-10 col-span-4 place-self-center h-[40vh]">
@@ -52,16 +60,24 @@ export function Personal({ address, authentic }) {
                 <button className="mx-2" onClick={() => setActiveTable(true)}>
                     <div className="rounded-3xl px-7 py-2 bg-[#0e192c] text-white hover:border hover:bg-white hover:text-black transition-all ease-linear duration-300 cursor-pointer"><h2>My Generating History</h2></div>
                 </button>
-                <button className="mx-2" onClick={() => setActiveTable(false)}>
+                <button className="mx-6" onClick={() => setActiveTable(false)}>
                     <div className="rounded-3xl px-7 py-2 bg-[#0e192c] text-white hover:border hover:bg-white hover:text-black transition-all ease-linear duration-300 cursor-pointer"><h2>My NFTs</h2></div>
+                </button>
+                <button onClick={()=>{
+                window.location.reload();
+                }} s
+                 >
+                <RedoOutlined />
                 </button>
             </div>
             </div>
+            
             {activeTable == true && (
             <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                         <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Music</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Create Time</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Operation</th>
@@ -71,7 +87,10 @@ export function Personal({ address, authentic }) {
                          {musicList.map((item, index) => ( 
                         <tr key={index}>
                             <td className="px-6 py-4 whitespace-nowrap">
-                                <a href={item.music_link}>{item.description}</a>
+                                {item.description}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                                <MusicPlayer audio={item.music_link}></MusicPlayer>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">{item.gen_date}</td>
                             <td className="px-6 py-4 whitespace-nowrap">{item.token_id == null ? 'NOT MINT' : 'MINT'}</td>
@@ -88,7 +107,7 @@ export function Personal({ address, authentic }) {
                 <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                     <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">OwnerID</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CreateID</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
@@ -99,17 +118,20 @@ export function Personal({ address, authentic }) {
                     {NFTList.map((item, index) => (
                     <tr key={index}>
                        <td className="px-6 py-4 whitespace-nowrap">
-                                <a href={item.music_link}>{item.description}</a>
+                        <Space direction="vertical">
+                            {item.description}
+                            <MusicPlayer audio={item.music_link}></MusicPlayer>
+                        </Space>  
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">{item.creator_add
+                        <td className="px-6 py-4 whitespace-nowrap" onClick={()=> copyName(item.creator_add)}>{hideMiddleDigits(item.creator_add)
                         }</td>
-                        <td className="px-6 py-4 whitespace-nowrap">{item.owner_add
+                        <td className="px-6 py-4 whitespace-nowrap" onClick={()=> copyName(item.creator_add)}>{hideMiddleDigits(item.owner_add)
                         }</td>
-                        <td className="px-6 py-4 whitespace-nowrap">{item.isSelling == 0 ? '-' : item.price}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-3 py-4 whitespace-nowrap">{item.isSelling == 0 ? '-' : item.price}</td>
+                        <td className="px-3 py-4 whitespace-nowrap">
                         <SellNFTButton token_id= {item.token_id} isSelling={item.isSelling}></SellNFTButton>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-2 py-4 whitespace-nowrap">
                         <WithdrawNFTButton token_id= {item.token_id} isSelling={item.isSelling}></WithdrawNFTButton>
                         </td>
                     </tr>
@@ -119,6 +141,14 @@ export function Personal({ address, authentic }) {
                 )}
             </div>
     );
-}
+};
+
+function hideMiddleDigits(id) {
+    const length = id.length;
+    const visibleLength = 4; // 设置保留前后可见数字的长度
+    const hiddenLength = length - 2 * visibleLength;
+    const visiblePart = id.slice(0, visibleLength) + ".".repeat(3) + id.slice(length - visibleLength);
+    return visiblePart;
+};
 
 export default Personal;

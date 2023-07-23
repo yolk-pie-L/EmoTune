@@ -4,7 +4,7 @@ import NFTItemArtifact from "../contracts/NFTItem.json";
 import NFTMarketplaceArtifact from "../contracts/NFTMarketplace.json";
 import NFTItemAddress from "../contracts/NFTItem-contract-address.json";
 import NFTMarketplaceAddress from "../contracts/NFTMarketplace-contract-address.json";
-
+import { Button, Space } from 'antd';
 export function WithdrawNFTButton({ token_id, isSelling}) {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const NFTItem = new ethers.Contract(
@@ -27,7 +27,11 @@ export function WithdrawNFTButton({ token_id, isSelling}) {
 
   return (
     <div>
-      <button
+      <Button
+        disabled={isSelling==0}
+        onClick={handleSubmit}
+      > WithDraw</Button>
+      {/* <button
         className={`px-4 py-2 rounded ${
           isSelling != 0 ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-600'
           }`}
@@ -35,7 +39,7 @@ export function WithdrawNFTButton({ token_id, isSelling}) {
           onClick={handleSubmit}
       >
         {isSelling != 0 ? 'WithDraw' : 'Inactive'}
-      </button>
+      </button> */}
     </div>
   );
 }

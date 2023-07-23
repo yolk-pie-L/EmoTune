@@ -4,6 +4,10 @@ import NFTItemArtifact from "../contracts/NFTItem.json";
 import NFTMarketplaceArtifact from "../contracts/NFTMarketplace.json";
 import NFTItemAddress from "../contracts/NFTItem-contract-address.json";
 import NFTMarketplaceAddress from "../contracts/NFTMarketplace-contract-address.json";
+import { InfoCircleOutlined, PayCircleOutlined } from '@ant-design/icons';
+import { Input, Tooltip } from 'antd';
+import { Button, Space } from 'antd';
+
 export function SellNFTButton({token_id,isSelling}) {
   const [inputValue, setInputValue] = useState("");
   const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -42,23 +46,30 @@ export function SellNFTButton({token_id,isSelling}) {
 
   return (
     <div>
-      <input
-        type="text"
-        id="inputField"
-        disabled = {isSelling != 0}
-        value={inputValue}
-        onChange={handleInputChange}
-      />
-      <button
-        className={`px-4 py-2 rounded ${
-          isSelling == 0 ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-600'
-          }`}
+      
+    <Space direction="vertical">
+      <Space.Compact style={{ width: '220px' }}>
+        <Input
+          placeholder="Enter your price"
+          prefix={<PayCircleOutlined className="site-form-item-icon" />}
+          suffix={
+              <Tooltip title="Only support integer">
+              <InfoCircleOutlined
+                style={{
+                  color: 'rgba(0,0,0,.45)',
+                }}
+              />
+            </Tooltip>
+          }
+          value={inputValue}
+          onChange={handleInputChange}
+          disabled = {isSelling != 0}
+        />
+        <Button 
           disabled={isSelling != 0}
-          onClick={handleSubmit}
-      >
-        {isSelling == 0 ? 'Sell' : 'Inactive'}
-      </button>
-
+          onClick={handleSubmit}>Sell</Button>
+      </Space.Compact>
+    </Space>
     </div>
   );
 }

@@ -5,6 +5,7 @@ import NFTItemArtifact from "../contracts/NFTItem.json";
 import NFTMarketplaceArtifact from "../contracts/NFTMarketplace.json";
 import NFTItemAddress from "../contracts/NFTItem-contract-address.json";
 import NFTMarketplaceAddress from "../contracts/NFTMarketplace-contract-address.json";
+import { Button, Space } from 'antd';
 export function MintNFTButton({token_id, mood_id, authentic}) {
   const [inputValue, setInputValue] = useState('');
   const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -38,7 +39,11 @@ export function MintNFTButton({token_id, mood_id, authentic}) {
 
   return (
     <div>
-      <button
+      <Button
+        disabled={token_id != null}
+        onClick={handleSubmit}
+      >Mint</Button>
+      {/* <button
         className={`px-4 py-2 rounded ${
         token_id == null ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-600'
         }`}
@@ -46,7 +51,7 @@ export function MintNFTButton({token_id, mood_id, authentic}) {
         onClick={handleSubmit}
         >
         {token_id == null ? 'Click Me to MINT' : 'Inactive'}
-        </button>
+        </button> */}
     </div>
   );
 }

@@ -34,3 +34,82 @@
   border-radius: 7px;
   width: 50px;
 }
+
+
+
+
+
+#emotune_title{
+  color: white;
+  font-size: 25px;
+
+  width: fit-content;
+  margin-left: 0px;
+  margin-top: 6px;
+}
+
+#right_block{
+  margin-left: 250px;
+  width: 1000px;
+}
+
+#description_first{
+  font-size: 20px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.overview_box{
+  margin-top: 50px;
+  border-style: hidden;
+  border-color: rgba(195, 195, 195, 0.708);
+  border-bottom-style: solid;
+  border-width: 1px;
+  overflow: auto;
+}
+
+.description{
+  font-size: 20px;
+  margin-top: 30px;
+}
+
+.little_title{
+  font-weight: 700;
+  font-size: 25px;
+}
+
+.icon1{
+  margin-left: 30px;
+  margin-top: -10px;
+  font-size: 100px;
+  color: orange;
+  float: left;
+}
+
+
+.text_box{
+  float: left;
+  margin-left: 50px;
+  margin-top: 10px;
+  /* margin-bottom: 30px; */
+  width: 75%;
+  height: 200px;
+}
+
+#start_button{
+  width: 300px;
+  height: 50px;
+  font-size: 15px;
+  font-weight: 700;
+
+  margin-left: 250px;
+  margin-top: 45px;
+
+  color: white;
+  background-color: rgb(250, 152, 6);
+  clear: both;
+}
+
+#start_button:hover{
+  background-color: rgba(250, 152, 6, 0.785);
+}
