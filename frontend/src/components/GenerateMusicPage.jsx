@@ -42,9 +42,13 @@ export function GenerateMusicPage({authentic}){
     const generateMusic = () => {
         event.preventDefault();
         if (inputMood.trim() != '') {
-          setTasks([...tasks, inputMood]);
           const curDate = new Date();
-          setTimes([...times, curDate]);
+          const newData = {
+            key: combinedData.length + 1,
+            name: inputMood,
+            time: curDate
+          }
+          setCombinedData([...combinedData, newData])
           const response = axios.post(
           "https://ve8x4frvd8.execute-api.us-east-1.amazonaws.com/default/createMood",
           {
@@ -55,7 +59,6 @@ export function GenerateMusicPage({authentic}){
           }
         ).then(function (res) {
           console.log(res.data)
-          setMoodId(res.data);//记录moodID
         }).catch((error) => {
           console.log(error);
           if(error.message == "Request failed with status code 401"){
