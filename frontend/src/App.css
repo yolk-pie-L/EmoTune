@@ -113,3 +113,14 @@
 #start_button:hover{
   background-color: rgba(250, 152, 6, 0.785);
 }
+
+#task_title{
+  font-size: 20px;
+  margin-top: 50px;
+  margin-left: 0;
+  float: left;
+  border-style:hidden;
+  border-bottom-style: solid;
+  border-color: rgba(195, 195, 195, 0.836);
+  border-width: 1.5px;
+}

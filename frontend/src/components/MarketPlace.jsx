@@ -7,11 +7,16 @@ import {
 import {
     IconButton,
 } from "@chakra-ui/react";
+import MusicPlayer from "./MusicGenerate";
+import {Space} from "antd";
 export function MarketPlace({ address, authentic }) {
     const [marketPlace, setMarketplace] = useState([]);
     const imageLinks = [
         "https://cdn.europosters.eu/image/750/posters/aurora-borealis-i47499.jpg",
         "https://www.celebritycruises.com/blog/content/uploads/2022/01/most-beautiful-mountains-in-the-world-kirkjufell-iceland-1024x580.jpg",
+        "https://www.holidify.com/images/cmsuploads/compressed/Taj_Mahal_20180814141729.png",
+        "https://www.crtv.cm/wp-content/uploads/2022/04/0BE1E695-A727-4A0A-ACDA-F7B47587892A.jpeg",
+        "https://abtoi.com/wp-content/uploads/2020/02/Famous-monuments-in-Italy-colosseum-scaled.jpg",
         "https://www.holidify.com/images/cmsuploads/compressed/Taj_Mahal_20180814141729.png"
     ]
     useEffect(() => {
@@ -42,7 +47,7 @@ export function MarketPlace({ address, authentic }) {
                                 <div className="flex items-center py-4 justify-between [&>*]:mx-2 [&>*>img]:h-20 [&>*>img]:aspect-square [&>*>img]:object-cover [&>*>img]:object-center [&>*>img]:rounded-xl [&>*>img:hover]:scale-110 [&>*>img:hover]:-rotate-12 [&>*>img]:cursor-pointer">
                                 </div>
 
-                                <div className="flex items-center justify-between">
+                                <div className="mb-4 flex items-center justify-between">
                                     <h2>{item.description}</h2>
                                     <div className="flex items-center justify-center gap-1 cursor-pointer">
                                         <div className="text-2xl">
@@ -57,7 +62,11 @@ export function MarketPlace({ address, authentic }) {
                                         <p className="text-sm">{item.price}</p>
                                     </div>
                                 </div>
+                            <Space>
+                            <MusicPlayer audio={item.music_link}></MusicPlayer>
                             <BuyNFTButton tokenId={item.token_id} price={item.price}></BuyNFTButton>
+                            </Space>
+                            
                             </div>
                 ))}       
                 </div>

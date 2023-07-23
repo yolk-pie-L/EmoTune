@@ -122,11 +122,11 @@ function App() {
                 href="/setting"
                 className="bg-orange-400 w-5/6 transition-transform text-white p-3 rounded-md "
               >
-                My wallet
+                My Wallet
               </a>
             ) : (
               <a href="/setting" className={UNSELECTED}>
-                My wallet
+                My Wallet
               </a>
             )}
           </div>
@@ -138,7 +138,7 @@ function App() {
             <header className="pb-4 p-4 pr-10 flex justify-between">
                 <div>
               <h2 className=" text-5xl font-bold font bg-gradient-to-r bg-clip-text text-transparent from-orange-500 to-orange-300">
-              Minting NFT for Generated Emotion-driven  Music
+              Emotune: Minting NFT for Generated Emotion-driven  Music
               </h2>
               <div className="overview_box">
                 <h3 className="text-3xl font-bold">What is EmoTune?</h3>

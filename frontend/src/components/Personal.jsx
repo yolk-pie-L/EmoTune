@@ -65,7 +65,7 @@ export function Personal({ address, authentic }) {
                 </button>
                 <button onClick={()=>{
                 window.location.reload();
-                }} s
+                }} 
                  >
                 <RedoOutlined />
                 </button>

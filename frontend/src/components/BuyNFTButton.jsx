@@ -4,6 +4,7 @@ import NFTItemArtifact from "../contracts/NFTItem.json";
 import NFTMarketplaceArtifact from "../contracts/NFTMarketplace.json";
 import NFTItemAddress from "../contracts/NFTItem-contract-address.json";
 import NFTMarketplaceAddress from "../contracts/NFTMarketplace-contract-address.json";
+import {Button} from "antd";
 export function BuyNFTButton({
   tokenId,
   price,
@@ -30,12 +31,9 @@ export function BuyNFTButton({
 
   return (
     <div>
-      <button
-        className="custom-button"
+      <Button
         onClick={handleSubmit}
-      >
-        BUY
-      </button>
+      > Buy</Button>
     </div>
   );
 }

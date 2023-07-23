@@ -1,9 +1,20 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-
+import { Space, Table, Tag } from 'antd';
 export function GenerateMusicPage({authentic}){
     const [inputMood, setInputMood] = useState('');
-    const [tasks, setTasks] = useState([]);
+    const [combinedData, setCombinedData] = useState([]);
+    const columns = [
+      {
+        title: 'Your input',
+        dataIndex: 'name',
+        key: 'name',
+      },
+      {
+        title: 'Create Time',
+        dataIndex: 'time',
+        key: 'time',
+      }];
     useEffect(() => {
       axios.get(
         "https://ve8x4frvd8.execute-api.us-east-1.amazonaws.com/default/getUserMoods",
@@ -11,14 +22,29 @@ export function GenerateMusicPage({authentic}){
             headers: {'Authorization': authentic}
         }
     ).then(function (res) {
-        console.log(res.data)
-        // setTasks(res.data);
+        console.log(res.data);
+        const descriptions = res.data
+          .filter(item => item.music_link == null)
+          .map(item => item.description);
+        const time = res.data
+          .filter(item => item.music_link == null)
+          .map(item => item.gen_date);
+        const combinedData = time.map((item, index) => ({
+            key: index,
+            name: descriptions[index],
+            time: item
+        }));
+        console.log(combinedData);
+        setCombinedData(combinedData);
+        
     })
     },[]);
     const generateMusic = () => {
         event.preventDefault();
         if (inputMood.trim() != '') {
           setTasks([...tasks, inputMood]);
+          const curDate = new Date();
+          setTimes([...times, curDate]);
           const response = axios.post(
           "https://ve8x4frvd8.execute-api.us-east-1.amazonaws.com/default/createMood",
           {
@@ -30,6 +56,12 @@ export function GenerateMusicPage({authentic}){
         ).then(function (res) {
           console.log(res.data)
           setMoodId(res.data);//记录moodID
+        }).catch((error) => {
+          console.log(error);
+          if(error.message == "Request failed with status code 401"){
+            window.alert("You need to login.");
+            window.location.href = "/setting";
+          }
         })
           setInputMood('');
         }
@@ -47,36 +79,64 @@ export function GenerateMusicPage({authentic}){
         </div>
         <div class="md:row-start-1 tags w-full max-w-2xl h-fit place-self-end">
         <ul class="flex gap-3 flex-wrap [&>*]:bg-white [&>*]:px-3 [&>*]:py-2 [&>*]:rounded-full [&>*:hover]:bg-slate-900 [&>*:hover]:text-white [&>*>a]:flex [&>*>a]:items-center [&>*>a]:gap-2">
-         <li><a href="" onClick={() => selectTag("Happy")}>
-             <h2>Happy</h2>
+         <li><a href="" onClick={() => selectTag("happy")}>
+             <h2>happy</h2>
              <iconify-icon icon="system-uicons:cross"></iconify-icon>
              </a></li>
-         <li><a href="" onClick={() => selectTag("Sad")}>
-              <h2>Sad</h2>
+         <li><a href="" onClick={() => selectTag("sad")}>
+              <h2>sad</h2>
               <iconify-icon icon="system-uicons:cross"></iconify-icon>
               </a></li>
-          <li><a href="" onClick={() => selectTag("Crazy")}>
-              <h2>Crazy</h2>
+          <li><a href="" onClick={() => selectTag("crazy")}>
+              <h2>crazy</h2>
               <iconify-icon icon="system-uicons:cross"></iconify-icon>    
              </a></li>
            <li><a href="" onClick={() => selectTag("hiphop")}>
                <h2>hiphop</h2>
               <iconify-icon icon="system-uicons:cross"></iconify-icon>
               </a></li>
-            <li><a href="" onClick={() => selectTag("hiphop")}>
-               <h2>hiphop</h2>
+            <li><a href="" onClick={() => selectTag("cheerful")}>
+               <h2>cheerful</h2>
               <iconify-icon icon="system-uicons:cross"></iconify-icon>
             </a></li>
-            <li><a href="" onClick={() => selectTag("hiphop")}>
-               <h2>hiphop</h2>
+            <li><a href="" onClick={() => selectTag("delighted")}>
+               <h2>delighted</h2>
               <iconify-icon icon="system-uicons:cross"></iconify-icon>
             </a></li>
-            <li><a href="" onClick={() => selectTag("hiphop")}>
-               <h2>hiphop</h2>
+            <li><a href="" onClick={() => selectTag("relaxed")}>
+               <h2>relaxed</h2>
               <iconify-icon icon="system-uicons:cross"></iconify-icon>
             </a></li>
-            <li><a href="" onClick={() => selectTag("hiphop")}>
-               <h2>hiphop</h2>
+            <li><a href="" onClick={() => selectTag("sorrow")}>
+               <h2>sorrow</h2>
+              <iconify-icon icon="system-uicons:cross"></iconify-icon>
+            </a></li>
+            <li><a href="" onClick={() => selectTag("encouraged")}>
+               <h2>encouraged</h2>
+              <iconify-icon icon="system-uicons:cross"></iconify-icon>
+            </a></li>
+            <li><a href="" onClick={() => selectTag("confident")}>
+               <h2>confident</h2>
+              <iconify-icon icon="system-uicons:cross"></iconify-icon>
+            </a></li>
+            <li><a href="" onClick={() => selectTag("nervous")}>
+               <h2>nervous</h2>
+              <iconify-icon icon="system-uicons:cross"></iconify-icon>
+            </a></li>
+            <li><a href="" onClick={() => selectTag("Worried")}>
+               <h2>Worried</h2>
+              <iconify-icon icon="system-uicons:cross"></iconify-icon>
+            </a></li>
+            <li><a href="" onClick={() => selectTag("optimistic")}>
+               <h2>optimistic</h2>
+              <iconify-icon icon="system-uicons:cross"></iconify-icon>
+            </a></li>
+            <li><a href="" onClick={() => selectTag("peaceful")}>
+               <h2>peaceful</h2>
+              <iconify-icon icon="system-uicons:cross"></iconify-icon>
+            </a></li>
+            <li><a href="" onClick={() => selectTag("amazed")}>
+               <h2>amazed</h2>
               <iconify-icon icon="system-uicons:cross"></iconify-icon>
             </a></li>
             </ul>
@@ -95,7 +155,7 @@ export function GenerateMusicPage({authentic}){
                                   </button>
 
                                   <div className="absolute -bottom-8 left-[1%] text-sm flex border-0 focus:outline-0 focus:ring-0 text-rose-500 mt-1 cursor-pointer">
-                                      <h2>Divide your input with semicolon</h2>
+                                      <h2>Tips: Please divide your input with semicolon</h2>
                                       <div className="text-lg">
                                           <iconify-icon icon="material-symbols:keyboard-arrow-down-rounded"></iconify-icon>
                                       </div>   
@@ -103,20 +163,25 @@ export function GenerateMusicPage({authentic}){
                               </form>   
                           </div>
                       </div>
-                      <table className="mt-4 min-w-full divide-y divide-gray-200">
+                      <div id="task_title">
+                        <h2>Tasks in progress</h2>
+                      </div>
+                      <Table columns={columns} dataSource={combinedData}></Table>
+                      {/* <table className="mt-4 min-w-full divide-y divide-gray-200">
                         <thead>
                           <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tasks</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tasks in progress</th>
                           </tr>
                         </thead>
                         <tbody>
                           {tasks.map((task, index) => (
                             <tr key={index}>
                               <td className="px-6 py-4 whitespace-nowrap">{task}</td>
+                              <td className="px-6 py-3 whitespace-nowrap">{times[index]}</td>
                             </tr>
                           ))}
                         </tbody>
-                      </table>
+                      </table> */}
         </>
     );
 }
