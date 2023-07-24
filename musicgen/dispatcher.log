@@ -1,0 +1,92 @@
+[1.05] clt=0 target=0.10 avg=0.10 inqueue=0.00 input=0.00
+DISPATCH -> 0
+[12.58] clt=1 target=0.19 avg=0.10 inqueue=20.00 input=30.00
+[25.35] clt=2 target=0.28 avg=0.09 inqueue=20.00 input=0.00
+[40.47] clt=3 target=0.38 avg=0.09 inqueue=20.00 input=0.00
+[51.65] clt=3 target=0.37 avg=0.09 inqueue=20.00 input=0.00
+[67.45] clt=3 target=0.37 avg=0.09 inqueue=20.00 input=0.00
+[78.21] clt=3 target=0.37 avg=0.09 inqueue=20.00 input=0.00
+[89.05] clt=3 target=0.38 avg=0.10 inqueue=20.00 input=0.00
+DISPATCH -> 1
+[99.85] clt=3 target=0.39 avg=0.10 inqueue=10.00 input=0.00
+DISPATCH -> 2
+[110.65] clt=3 target=0.39 avg=0.10 inqueue=2.00 input=2.00
+DISPATCH -> 3
+[121.52] clt=3 target=0.39 avg=0.10 inqueue=11.00 input=10.00
+DISPATCH -> 0
+[132.29] clt=3 target=0.39 avg=0.10 inqueue=10.00 input=0.00
+DISPATCH -> 3
+[143.08] clt=3 target=0.39 avg=0.10 inqueue=11.00 input=6.00
+DISPATCH -> 0
+[153.86] clt=3 target=0.38 avg=0.10 inqueue=10.00 input=1.00
+[164.95] clt=2 target=0.29 avg=0.10 inqueue=14.00 input=4.00
+DISPATCH -> 0
+[176.65] clt=3 target=0.39 avg=0.10 inqueue=23.00 input=12.00
+[188.51] clt=4 target=0.49 avg=0.10 inqueue=38.00 input=15.00
+[201.24] clt=5 target=0.59 avg=0.10 inqueue=38.00 input=0.00
+DISPATCH -> 0
+[216.64] clt=6 target=0.67 avg=0.10 inqueue=37.00 input=0.00
+DISPATCH -> 1
+[229.33] clt=6 target=0.66 avg=0.09 inqueue=36.00 input=4.00
+DISPATCH -> 0
+DISPATCH -> 2
+[245.52] clt=6 target=0.66 avg=0.09 inqueue=35.00 input=4.00
+DISPATCH -> 0
+[256.33] clt=6 target=0.66 avg=0.09 inqueue=38.00 input=7.00
+DISPATCH -> 3
+[267.13] clt=6 target=0.66 avg=0.09 inqueue=40.00 input=4.00
+DISPATCH -> 4
+[277.99] clt=6 target=0.67 avg=0.10 inqueue=39.00 input=3.00
+DISPATCH -> 1
+[288.92] clt=6 target=0.67 avg=0.10 inqueue=37.00 input=0.00
+DISPATCH -> 2
+[299.76] clt=6 target=0.67 avg=0.10 inqueue=33.00 input=0.00
+DISPATCH -> 0
+[310.62] clt=6 target=0.67 avg=0.10 inqueue=28.00 input=0.00
+DISPATCH -> 1
+[321.43] clt=6 target=0.67 avg=0.10 inqueue=27.00 input=1.00
+DISPATCH -> 3
+[332.56] clt=6 target=0.67 avg=0.10 inqueue=31.00 input=5.00
+DISPATCH -> 4
+[343.65] clt=5 target=0.58 avg=0.10 inqueue=31.00 input=3.00
+DISPATCH -> 1
+[355.06] clt=4 target=0.48 avg=0.10 inqueue=31.00 input=4.00
+DISPATCH -> 2
+DISPATCH -> 0
+[367.03] clt=3 target=0.38 avg=0.10 inqueue=24.00 input=0.00
+DISPATCH -> 3
+[378.72] clt=4 target=0.48 avg=0.10 inqueue=26.00 input=6.00
+[390.43] clt=4 target=0.48 avg=0.10 inqueue=26.00 input=0.00
+DISPATCH -> 1
+[401.70] clt=4 target=0.48 avg=0.10 inqueue=26.00 input=4.00
+DISPATCH -> 0
+DISPATCH -> 2
+[416.10] clt=4 target=0.48 avg=0.10 inqueue=22.00 input=0.00
+DISPATCH -> 3
+[427.09] clt=4 target=0.48 avg=0.10 inqueue=19.00 input=0.00
+DISPATCH -> 2
+[437.86] clt=4 target=0.47 avg=0.09 inqueue=27.00 input=10.00
+DISPATCH -> 0
+[449.22] clt=5 target=0.57 avg=0.09 inqueue=44.00 input=20.00
+DISPATCH -> 1
+[460.88] clt=6 target=0.67 avg=0.10 inqueue=40.00 input=0.00
+DISPATCH -> 2
+DISPATCH -> 3
+[480.47] clt=6 target=0.67 avg=0.10 inqueue=34.00 input=0.00
+DISPATCH -> 0
+[491.28] clt=6 target=0.67 avg=0.10 inqueue=30.00 input=0.00
+DISPATCH -> 2
+[502.07] clt=6 target=0.67 avg=0.10 inqueue=20.00 input=0.00
+DISPATCH -> 1
+[512.99] clt=6 target=0.67 avg=0.10 inqueue=10.00 input=0.00
+DISPATCH -> 4
+[523.79] clt=6 target=0.68 avg=0.10 inqueue=0.00 input=0.00
+[534.78] clt=6 target=0.68 avg=0.10 inqueue=0.00 input=0.00
+[545.81] clt=6 target=0.68 avg=0.10 inqueue=0.00 input=0.00
+[556.83] clt=6 target=0.68 avg=0.10 inqueue=0.00 input=0.00
+[567.82] clt=6 target=0.68 avg=0.10 inqueue=0.00 input=0.00
+[578.83] clt=6 target=0.68 avg=0.10 inqueue=0.00 input=0.00
+[590.27] clt=5 target=0.58 avg=0.10 inqueue=0.00 input=0.00
+[601.89] clt=4 target=0.49 avg=0.10 inqueue=0.00 input=0.00
+[613.55] clt=3 target=0.38 avg=0.10 inqueue=0.00 input=0.00
+[625.19] clt=2 target=0.28 avg=0.09 inqueue=0.00 input=0.00
