@@ -1,5 +1,5 @@
 # EmoTune
-EmoTune: Minting NFT for Generated Emotion-driven Music
+**EmoTune: Minting NFT for Generated Emotion-driven Music**
 
 -	Built an innovative application based on the MusicGen model which generates music according to user emotions, paving the way for the creation of musical NFTs and promoting a novel form of emotion-linked artistic expression
 -	Deployed the underlying smart contract on the Polygon test network, ensuring transaction reliability and the uniqueness of the generated NFTs
