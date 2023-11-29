@@ -5,6 +5,9 @@ EmoTune: Minting NFT for Generated Emotion-driven Music
 -	Deployed the underlying smart contract on the Polygon test network, ensuring transaction reliability and the uniqueness of the generated NFTs
 -	Designed an application architecture to handle high-access traffic, leveraging multiple AWS services including EC2, Serverless Computing, RDS, and API Gateway
 
+See https://github.com/yolk-pie-L/EmoTune/blob/master/presentation.mp4 to watch our demo presentation. 
+
+:-)
 
 ```sh
 cd frontend
